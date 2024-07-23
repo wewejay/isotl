@@ -1,4 +1,11 @@
 import subprocess
+from typing import NamedTuple
+
+
+class OperationResult(NamedTuple):
+    success: bool
+    output: str
+    results: list[any]
 
 
 def ps_run(cmd: str) -> subprocess.CompletedProcess:
@@ -11,11 +18,11 @@ def ps_run(cmd: str) -> subprocess.CompletedProcess:
     return completed
 
 
-def mount_win(abs_path: str) -> tuple[str, str] | None:
+def mount_win(abs_path: str) -> OperationResult:
     """
     Mount an ISO file in Windows
     :param abs_path: Absolute path of the ISO file
-    :return: (Drive letter, File system label)
+    :return: Tuple of (success, output, drive letter, label)
     """
     cmd = (f"$result = Mount-DiskImage \"{abs_path}\" -PassThru ;" +
            "$drive = ($result | Get-Volume) ;" +
@@ -26,18 +33,18 @@ def mount_win(abs_path: str) -> tuple[str, str] | None:
     error = raw_output.stderr.decode("utf-8").strip()
     if error != "":
         print(error)
-        return None
+        return OperationResult(False, error, [])
     output_lines = output.split('\n')
     drive = output_lines[0].strip()
     label = output_lines[1].strip()
-    return drive, label
+    return OperationResult(True, output, [drive, label])
 
 
-def unmount_win(abs_path: str) -> bool:
+def unmount_win(abs_path: str) -> OperationResult:
     """
     Dismount an ISO file in Windows
     :param abs_path: Absolute path of the ISO file
-    :return: True if successful, False otherwise
+    :return: Tuple of (success, output)
     """
     cmd = f"Dismount-DiskImage \"{abs_path}\""
     raw_output = ps_run(cmd)
@@ -45,5 +52,5 @@ def unmount_win(abs_path: str) -> bool:
     error = raw_output.stderr.decode("utf-8").strip()
     if error != "":
         print(error)
-        return False
-    return True
+        return OperationResult(False, error, [])
+    return OperationResult(True, output, [])
