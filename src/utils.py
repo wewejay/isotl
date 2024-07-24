@@ -26,8 +26,8 @@ def ps_read_results(raw_output: subprocess.CompletedProcess) -> OperationResult:
     :param raw_output: CompletedProcess object
     :return: OperationResult object
     """
-    output = raw_output.stdout.decode("utf-8").strip()
-    error = raw_output.stderr.decode("utf-8").strip()
+    output = raw_output.stdout.decode("utf-8")
+    error = raw_output.stderr.decode("utf-8")
     return OperationResult(raw_output.returncode, output, error, [])
 
 
@@ -45,8 +45,8 @@ def mount_win(abs_path: str) -> OperationResult:
     if result.return_code != 0:
         return result
     output_lines = result.output.split('\n')
-    drive = output_lines[0].strip()
-    label = output_lines[1].strip()
+    drive = output_lines[0]
+    label = output_lines[1]
     return OperationResult(result.return_code, result.output, result.error, [drive, label])
 
 
@@ -72,3 +72,17 @@ def get_all_drives_win() -> OperationResult:
         return result
     drives = result.output.split('\n')
     return OperationResult(result.return_code, result.output, result.error, drives)
+
+
+def get_iso_from_drive_letter_win(drive_letter: str) -> OperationResult:
+    """
+    Get the ISO file mounted on a drive letter in Windows
+    :param drive_letter: Drive letter to check
+    :return: OperationResult object
+    """
+    cmd = f"Get-Volume -DriveLetter {drive_letter} | Get-DiskImage | Select-Object -ExpandProperty ImagePath"
+    result = ps_read_results(ps_run(cmd))
+    if result.return_code != 0:
+        return result
+    iso_path = result.output
+    return OperationResult(result.return_code, result.output, result.error, [iso_path])
