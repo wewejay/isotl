@@ -1,6 +1,11 @@
 from peewee import *
 
-db = SqliteDatabase('isotl.db')
+db = SqliteDatabase(None)
+
+
+class BaseModel(Model):
+    class Meta:
+        database = db
 
 
 class Image(Model):
@@ -9,16 +14,11 @@ class Image(Model):
     size = IntegerField()
     md5 = CharField()
 
-    class Meta:
-        database = db
-
 
 class File(Model):
     rel_path = CharField()
     name = CharField()
     size = IntegerField()
-    md5 = CharField()
     image = ForeignKeyField(Image)
 
-    class Meta:
-        database = db
+

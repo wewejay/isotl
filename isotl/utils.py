@@ -1,6 +1,9 @@
 import subprocess
 from typing import NamedTuple
 
+from peewee import SqliteDatabase
+from db import db
+
 
 class OperationResult(NamedTuple):
     return_code: int
@@ -86,3 +89,23 @@ def get_iso_from_drive_letter_win(drive_letter: str) -> OperationResult:
         return result
     iso_path = result.output
     return OperationResult(result.return_code, result.output, result.error, [iso_path])
+
+
+def get_db(db_path: str) -> SqliteDatabase:
+    """
+    Connect to the database
+    :param db_path: Path to the database
+    :return: None
+    """
+    sqlite_db = SqliteDatabase(db_path)
+    return sqlite_db
+
+
+def init_db(db_path: str):
+    """
+    Initialize the database
+    :param db_path: Path to the database
+    :return: None
+    """
+    db.init(db_path)
+    return None
