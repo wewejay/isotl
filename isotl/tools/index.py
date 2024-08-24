@@ -44,3 +44,7 @@ def index(path: str):
     print("Start indexing...")
 
     db.db = utils.get_db(db_path)
+
+    for iso_abs_path in iso_abs_path_list:
+        print(f"Indexing {iso_abs_path}")
+        utils.mount_win(iso_abs_path)
