@@ -18,4 +18,8 @@ def index(path: str):
         iso_abs_path_list = [os.path.join(abs_path, f) for f in os.listdir(abs_path) if f.endswith('.iso')]
     else:
         raise ValueError(f"Invalid path: {abs_path}")
+    if not iso_abs_path_list:
+        print("No ISOs found.")
+        return
+    print("Number of ISOs: {}".format(len(iso_abs_path_list)))
 
