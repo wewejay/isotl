@@ -99,13 +99,3 @@ def get_db(db_path: str) -> SqliteDatabase:
     """
     sqlite_db = SqliteDatabase(db_path)
     return sqlite_db
-
-
-def init_db(db_path: str):
-    """
-    Initialize the database
-    :param db_path: Path to the database
-    :return: None
-    """
-    db.init(db_path)
-    return None

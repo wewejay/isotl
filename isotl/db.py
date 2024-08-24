@@ -20,5 +20,3 @@ class File(Model):
     name = CharField()
     size = IntegerField()
     image = ForeignKeyField(Image)
-
-
