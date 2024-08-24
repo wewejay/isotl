@@ -23,3 +23,14 @@ def index(path: str):
         return
     print("Number of ISOs: {}".format(len(iso_abs_path_list)))
 
+    while True:
+        inp = input("q to quit, s to show all isos, c to continue: ").lower()
+        if inp == 'q':
+            print("Program terminated.")
+            return
+        elif inp == 's':
+            for i in iso_abs_path_list:
+                print(i)
+        elif inp == 'c':
+            break
+
