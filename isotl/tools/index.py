@@ -1,6 +1,6 @@
 import os.path
-
-import click
+import time
+from isotl import utils, db
 
 
 def index(path: str):
@@ -34,3 +34,13 @@ def index(path: str):
         elif inp == 'c':
             break
 
+    starttime = time.time()
+
+    dbfile = "isotl.sqlite3"
+    db_path = os.path.abspath(dbfile)
+
+    print("DB File: {}".format(os.path.abspath(dbfile)))
+
+    print("Start indexing...")
+
+    db.db = utils.get_db(db_path)
